@@ -1,0 +1,24 @@
+{
+  "name": "expiry-reminder",
+  "version": "1.0.0",
+  "description": "Expiry Reminder - Modern Personal & Family Expiry Date Reminder Web Application",
+  "scripts": {
+    "dev:backend": "cd backend && npm start",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build:frontend": "cd frontend && npm run build",
+    "seed": "cd backend && npm run seed",
+    "start": "cd backend && npm start"
+  },
+  "keywords": [
+    "expiry-reminder",
+    "personal-inventory",
+    "household",
+    "medicine-tracker",
+    "react",
+    "tailwind",
+    "prisma",
+    "mysql"
+  ],
+  "author": "Expiry Reminder Team",
+  "license": "MIT"
+}
