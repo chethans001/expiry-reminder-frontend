@@ -89,9 +89,17 @@ export default function ProfilePage() {
 
       {/* User Info Overview Banner */}
       <div className="glass-card p-6 flex items-center gap-5">
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-500 via-indigo-600 to-indigo-700 text-white font-extrabold text-2xl flex items-center justify-center shadow-md shadow-indigo-200 dark:shadow-none shrink-0">
-          {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
-        </div>
+        {user?.avatar ? (
+          <img
+            src={user.avatar}
+            alt={user.name || 'User'}
+            className="w-16 h-16 rounded-2xl object-cover border border-slate-200 dark:border-slate-700 shadow-md shadow-indigo-100 dark:shadow-none shrink-0"
+          />
+        ) : (
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-500 via-indigo-600 to-indigo-700 text-white font-extrabold text-2xl flex items-center justify-center shadow-md shadow-indigo-200 dark:shadow-none shrink-0">
+            {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+          </div>
+        )}
         <div>
           <h2 className="text-lg font-bold text-slate-900 dark:text-white">{user?.name}</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{user?.email}</p>

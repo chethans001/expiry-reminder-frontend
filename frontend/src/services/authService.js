@@ -11,6 +11,11 @@ export const authService = {
     return res.data;
   },
 
+  async syncSupabaseUser(data) {
+    const res = await api.post('/auth/supabase-sync', data);
+    return res.data;
+  },
+
   async getProfile() {
     const res = await api.get('/auth/profile');
     return res.data;

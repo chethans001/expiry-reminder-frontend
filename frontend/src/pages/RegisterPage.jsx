@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import GoogleLoginButton from '../components/common/GoogleLoginButton';
 import { Clock, Lock, Mail, User, ArrowRight, AlertCircle } from 'lucide-react';
 
 export default function RegisterPage() {
@@ -59,7 +60,7 @@ export default function RegisterPage() {
             Create your personal account
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Keep track of food, medicine & personal household items
+            Keep track of food, medicine &amp; personal household items
           </p>
         </div>
 
@@ -71,6 +72,22 @@ export default function RegisterPage() {
             </div>
           )}
 
+          {/* Quick Sign up with Google */}
+          <div className="mb-5">
+            <GoogleLoginButton label="Sign up with Google" />
+          </div>
+
+          <div className="relative my-5">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200 dark:border-slate-700" />
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="px-3 bg-white dark:bg-slate-800 text-slate-400 font-medium">
+                or sign up with email
+              </span>
+            </div>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">
@@ -81,7 +98,7 @@ export default function RegisterPage() {
                   type="text"
                   required
                   autoFocus
-                  placeholder="e.g. Alex Johnson"
+                  placeholder="Your full name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"

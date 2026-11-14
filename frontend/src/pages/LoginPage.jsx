@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import GoogleLoginButton from '../components/common/GoogleLoginButton';
 import { Clock, Lock, Mail, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
 
 export default function LoginPage() {
@@ -43,11 +44,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleFillDemo = () => {
-    setEmail('demo@expiryreminder.local');
-    setPassword('Password123!');
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-indigo-50/60 via-slate-50 to-purple-50/60 dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/40">
       <div className="w-full max-w-md">
@@ -65,7 +61,7 @@ export default function LoginPage() {
             Welcome back
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Access your personal items & expiry reminders
+            Sign in to access your personal household items &amp; expiry reminders
           </p>
         </div>
 
@@ -84,6 +80,22 @@ export default function LoginPage() {
               <span>{error}</span>
             </div>
           )}
+
+          {/* Primary Supabase Google Sign In */}
+          <div className="mb-5">
+            <GoogleLoginButton label="Continue with Google" />
+          </div>
+
+          <div className="relative my-5">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200 dark:border-slate-700" />
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="px-3 bg-white dark:bg-slate-800 text-slate-400 font-medium">
+                or sign in with email
+              </span>
+            </div>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -134,21 +146,10 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md shadow-indigo-200 dark:shadow-none transition flex items-center justify-center gap-2 mt-2"
             >
-              <span>{loading ? 'Logging in...' : 'Sign In'}</span>
+              <span>{loading ? 'Signing in...' : 'Sign In'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
-
-          {/* Quick Demo Fill button */}
-          <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 text-center">
-            <button
-              type="button"
-              onClick={handleFillDemo}
-              className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
-            >
-              Click here to fill Demo Account credentials
-            </button>
-          </div>
         </div>
 
         <p className="text-center text-xs text-slate-500 dark:text-slate-400 mt-6">
