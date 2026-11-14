@@ -4,6 +4,7 @@ import ExpiryBadge from '../common/ExpiryBadge';
 import CategoryIcon from './CategoryIcon';
 import { formatDisplayDate } from '../../utils/dateUtils';
 import { productService } from '../../services/productService';
+import { getAssetUrl } from '../../services/api';
 import {
   Calendar,
   MapPin,
@@ -61,7 +62,7 @@ export default function ItemDetailsModal({
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           {item.imageUrl ? (
             <img
-              src={item.imageUrl}
+              src={getAssetUrl(item.imageUrl)}
               alt={item.name}
               className="w-20 h-20 rounded-2xl object-cover border border-slate-200 dark:border-slate-700 shadow-sm"
             />

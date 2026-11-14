@@ -1,38 +1,55 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Retrieve Supabase URL & Anon Key from Vite env or localStorage override
+function cleanVal(v) {
+  if (!v || typeof v !== 'string') return '';
+  return v.trim().replace(/^["']|["']$/g, '').trim();
+}
+
+// Retrieve Supabase URL & Anon Key from Vite build env or localStorage override
+// Public/anon keys are safe in browser code. Never place secret/service-role keys here.
 export function getSupabaseCredentials() {
-  const envUrl = import.meta.env.VITE_SUPABASE_URL;
-  const envKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  const envUrl = cleanVal(import.meta.env.VITE_SUPABASE_URL);
+  const envKey = cleanVal(
+    import.meta.env.VITE_SUPABASE_ANON_KEY ||
+    import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
+  );
 
-  const localUrl = typeof window !== 'undefined' ? localStorage.getItem('supabase_url') : null;
-  const localKey = typeof window !== 'undefined' ? localStorage.getItem('supabase_anon_key') : null;
+  const localUrl = typeof window !== 'undefined' ? cleanVal(localStorage.getItem('supabase_url')) : '';
+  const localKey = typeof window !== 'undefined' ? cleanVal(localStorage.getItem('supabase_anon_key')) : '';
 
-  const url = (envUrl && envUrl.trim()) || (localUrl && localUrl.trim()) || '';
-  const anonKey = (envKey && envKey.trim()) || (localKey && localKey.trim()) || '';
+  const url = envUrl || localUrl || '';
+  const anonKey = envKey || localKey || '';
 
   return { url, anonKey };
 }
 
 let supabaseInstance = null;
+let lastUsedCreds = { url: '', anonKey: '' };
 
 export function getSupabaseClient() {
-  if (supabaseInstance) return supabaseInstance;
-
   const { url, anonKey } = getSupabaseCredentials();
 
-  if (url && anonKey) {
-    try {
-      supabaseInstance = createClient(url, anonKey, {
-        auth: {
-          persistSession: true,
-          autoRefreshToken: true,
-          detectSessionInUrl: true
-        }
-      });
-    } catch (err) {
-      console.warn('Failed to initialize Supabase client:', err);
-    }
+  if (!url || !anonKey || !isSupabaseConfigured()) {
+    return null;
+  }
+
+  if (supabaseInstance && lastUsedCreds.url === url && lastUsedCreds.anonKey === anonKey) {
+    return supabaseInstance;
+  }
+
+  try {
+    supabaseInstance = createClient(url, anonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storage: typeof window !== 'undefined' ? window.localStorage : undefined
+      }
+    });
+    lastUsedCreds = { url, anonKey };
+  } catch (err) {
+    console.warn('Failed to initialize Supabase client:', err);
+    return null;
   }
 
   return supabaseInstance;
@@ -40,13 +57,19 @@ export function getSupabaseClient() {
 
 export function isSupabaseConfigured() {
   const { url, anonKey } = getSupabaseCredentials();
-  return Boolean(url && anonKey && url.startsWith('http'));
+  return Boolean(
+    url &&
+    anonKey &&
+    url.length > 10 &&
+    anonKey.length > 10 &&
+    (url.startsWith('https://') || url.startsWith('http://'))
+  );
 }
 
 export function saveSupabaseCredentials(url, anonKey) {
   if (url && anonKey) {
-    localStorage.setItem('supabase_url', url.trim());
-    localStorage.setItem('supabase_anon_key', anonKey.trim());
+    localStorage.setItem('supabase_url', cleanVal(url));
+    localStorage.setItem('supabase_anon_key', cleanVal(anonKey));
     supabaseInstance = null; // Re-instantiate with new keys
     return getSupabaseClient();
   }
@@ -59,7 +82,10 @@ export async function signInWithGoogle() {
     throw new Error('SUPABASE_NOT_CONFIGURED');
   }
 
-  const redirectTo = `${window.location.origin}/dashboard`;
+  // Derive the target frontend app origin (Vercel production URL or localhost)
+  const appOrigin = cleanVal(import.meta.env.VITE_APP_URL) || (typeof window !== 'undefined' ? window.location.origin : '');
+  const cleanOrigin = appOrigin.replace(/\/+$/, '');
+  const redirectTo = `${cleanOrigin}/dashboard`;
 
   const { data, error } = await client.auth.signInWithOAuth({
     provider: 'google',

@@ -5,6 +5,7 @@ import CategoryIcon from '../components/items/CategoryIcon';
 import ExpiryBadge from '../components/common/ExpiryBadge';
 import ConfirmDialog from '../components/common/ConfirmDialog';
 import { formatDisplayDate } from '../utils/dateUtils';
+import { getAssetUrl } from '../services/api';
 import {
   ArrowLeft,
   Calendar,
@@ -145,7 +146,7 @@ export default function ItemDetailsPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
           {item.imageUrl ? (
             <img
-              src={item.imageUrl}
+              src={getAssetUrl(item.imageUrl)}
               alt={item.name}
               className="w-28 h-28 rounded-2xl object-cover border border-slate-200 dark:border-slate-700 shadow-sm"
             />

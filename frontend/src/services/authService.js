@@ -12,7 +12,13 @@ export const authService = {
   },
 
   async syncSupabaseUser(data) {
-    const res = await api.post('/auth/supabase-sync', data);
+    const config = {};
+    if (data && data.supabaseToken) {
+      config.headers = {
+        Authorization: `Bearer ${data.supabaseToken}`
+      };
+    }
+    const res = await api.post('/auth/supabase-sync', data, config);
     return res.data;
   },
 

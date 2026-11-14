@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import ExpiryBadge from '../common/ExpiryBadge';
 import CategoryIcon from './CategoryIcon';
 import { formatDisplayDate } from '../../utils/dateUtils';
+import { getAssetUrl } from '../../services/api';
 import {
   Heart,
   Calendar,
@@ -79,7 +80,7 @@ export default function ItemCard({
         <div className="flex items-center gap-3">
           {item.imageUrl ? (
             <img
-              src={item.imageUrl}
+              src={getAssetUrl(item.imageUrl)}
               alt={item.name}
               className="w-14 h-14 rounded-xl object-cover border border-slate-100 dark:border-slate-700 shrink-0"
             />

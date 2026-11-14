@@ -4,6 +4,7 @@ import { productService } from '../services/productService';
 import { categoryService } from '../services/categoryService';
 import { calculateExpiry } from '../utils/dateUtils';
 import ExpiryBadge from '../components/common/ExpiryBadge';
+import { getAssetUrl } from '../services/api';
 import confetti from 'canvas-confetti';
 import {
   ArrowLeft,
@@ -122,7 +123,7 @@ export default function AddEditItemPage() {
           setManufacturingDate(new Date(item.manufacturingDate).toISOString().split('T')[0]);
         }
         if (item.imageUrl) {
-          setImagePreview(item.imageUrl);
+          setImagePreview(getAssetUrl(item.imageUrl));
         }
       }
     } catch (err) {
